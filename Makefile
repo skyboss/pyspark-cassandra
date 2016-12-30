@@ -115,7 +115,7 @@ dist: clean-pyc
 	sbt assembly
 	cd python ; \
 		find . -mindepth 2 -name '*.py' -print | \
-		zip ../target/scala-2.10/pyspark-cassandra-assembly-$(VERSION).jar -@
+		zip ../target/scala-2.11/pyspark-cassandra-assembly-$(VERSION).jar -@
 
 
 all: clean dist

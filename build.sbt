@@ -6,23 +6,25 @@ version := io.Source.fromFile("version.txt").mkString.trim
 
 organization := "TargetHolding"
 
-scalaVersion := "2.10.5"
+scalaVersion := "2.11.8"
 
 credentials += Credentials(Path.userHome / ".ivy2" / ".sbtcredentials")
 
-licenses += "Apache-2.0" -> url("http://opensource.org/licenses/Apache-2.0") 
+licenses += "Apache-2.0" -> url("http://opensource.org/licenses/Apache-2.0")
 
 libraryDependencies ++= Seq(
-	"com.datastax.spark" %% "spark-cassandra-connector-java" % "1.6.0-M1"
+  "com.datastax.spark" % "spark-cassandra-connector_2.11" % "2.0.0-M3"
 )
 
 spName := "TargetHolding/pyspark-cassandra"
 
-sparkVersion := "1.5.1"
+sparkVersion := "2.0.0"
 
 sparkComponents ++= Seq("streaming", "sql")
 
 javacOptions ++= Seq("-source", "1.8", "-target", "1.8")
+scalacOptions ++= Seq("-Xmax-classfile-name", "73")
+
 
 assemblyOption in assembly := (assemblyOption in assembly).value.copy(
 	includeScala = false
