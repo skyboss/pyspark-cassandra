@@ -325,7 +325,7 @@ class SpanningRDD(RDD):
             return rdd
 
 
-def joinWithCassandraTable(left_rdd, keyspace, table):
+def joinWithCassandraTable(left_rdd, keyspace, table, repartition=False):
     '''
         Join an RDD with a Cassandra table on the partition key. Use .on(...)
         to specifiy other columns to join on. .select(...), .where(...) and
@@ -341,7 +341,7 @@ def joinWithCassandraTable(left_rdd, keyspace, table):
             The CQL table to join on.
     '''
 
-    return CassandraJoinRDD(left_rdd, keyspace, table)
+    return CassandraJoinRDD(left_rdd, keyspace, table, repartition)
 
 
 class CassandraJoinRDD(_CassandraRDD):
@@ -349,16 +349,17 @@ class CassandraJoinRDD(_CassandraRDD):
         TODO
     '''
 
-    def __init__(self, left_rdd, keyspace, table):
+    def __init__(self, left_rdd, keyspace, table, repartition):
         super(CassandraJoinRDD, self).__init__(left_rdd.ctx, keyspace, table)
         self.crdd = self._helper \
             .joinWithCassandraTable(
                 left_rdd._jrdd,
                 keyspace,
-                table
+                table,
+                repartition
             )
-
 
     def on(self, *columns):
         columns = as_java_array(self.ctx._gateway, "String", (str(c) for c in columns))
         return self._specialize('on', columns)
+

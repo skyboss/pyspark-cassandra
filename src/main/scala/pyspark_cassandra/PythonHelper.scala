@@ -102,10 +102,15 @@ class PythonHelper() {
 
   /* rdds ------------------------------------------------------------------ */
 
-  def joinWithCassandraTable(rdd: JavaRDD[Array[Byte]], keyspace: String, table: String): CassandraJoinRDD[Any, UnreadRow] = {
+  def joinWithCassandraTable(rdd: JavaRDD[Array[Byte]],
+                             keyspace: String,
+                             table: String,
+                             repartition: Boolean = false): CassandraJoinRDD[Any, UnreadRow] = {
     implicit val rwf = new GenericRowWriterFactory(None, None)
     implicit val rrf = new DeferringRowReaderFactory()
-    rdd.rdd.unpickle().joinWithCassandraTable(keyspace, table)
+    val left = if (repartition) rdd.rdd.unpickle()
+    else rdd.rdd.unpickle().repartitionByCassandraReplica(keyspace, table);
+    left.joinWithCassandraTable(keyspace, table)
   }
 
   def on(rdd: CassandraJoinRDD[Any, UnreadRow], columns: Array[String]) = {
