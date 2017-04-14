@@ -18,7 +18,7 @@ libraryDependencies ++= Seq(
 
 spName := "TargetHolding/pyspark-cassandra"
 
-sparkVersion := "2.0.0"
+sparkVersion := "2.1.0"
 
 sparkComponents ++= Seq("streaming", "sql")
 
